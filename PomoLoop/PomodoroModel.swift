@@ -6,6 +6,7 @@ import UserNotifications
 final class PomodoroModel: ObservableObject {
     @Published var isRunning = false
     @Published var snapshot: PomodoroSnapshot?
+    @Published var liveActivityStatus = "Live Activity状態を確認中…"
 
     @AppStorage("focusMinutes") var focusMinutes = 25
     @AppStorage("shortBreakMinutes") var shortBreakMinutes = 5
@@ -20,7 +21,10 @@ final class PomodoroModel: ObservableObject {
         isRunning = sessionStartEpoch > 0
         refresh()
         startTicker()
-        Task { await requestNotifications() }
+        Task {
+            await requestNotifications()
+            liveActivityStatus = live.authorizationSummary()
+        }
     }
 
     var schedule: PomodoroSchedule {
@@ -41,9 +45,23 @@ final class PomodoroModel: ObservableObject {
         sessionStartEpoch = now.timeIntervalSince1970
         isRunning = true
         refresh()
+        liveActivityStatus = "⏳ Live Activity開始要求中…"
         Task {
-            if let snapshot { await live.start(sessionStart: now, snapshot: snapshot) }
+            if let snapshot {
+                liveActivityStatus = await live.start(sessionStart: now, snapshot: snapshot)
+            }
             await scheduleUpcomingNotifications()
+        }
+    }
+
+    func retryLiveActivity() {
+        guard let start = sessionStart, let snapshot else {
+            liveActivityStatus = live.authorizationSummary()
+            return
+        }
+        liveActivityStatus = "⏳ Live Activity再試行中…"
+        Task {
+            liveActivityStatus = await live.start(sessionStart: start, snapshot: snapshot)
         }
     }
 
@@ -53,6 +71,7 @@ final class PomodoroModel: ObservableObject {
         sessionStartEpoch = 0
         isRunning = false
         snapshot = nil
+        liveActivityStatus = "停止済み / " + live.authorizationSummary()
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
         Task { await live.end() }
         startTicker()
@@ -70,7 +89,11 @@ final class PomodoroModel: ObservableObject {
         snapshot = newSnapshot
         if changedPhase {
             Task {
-                await live.update(snapshot: newSnapshot)
+                let result = await live.update(snapshot: newSnapshot)
+                // Do not overwrite a useful start error with a harmless "0件" during initial startup.
+                if !result.contains("0件") {
+                    liveActivityStatus = result
+                }
                 await scheduleUpcomingNotifications()
             }
         }
@@ -92,7 +115,6 @@ final class PomodoroModel: ObservableObject {
         let center = UNUserNotificationCenter.current()
         center.removeAllPendingNotificationRequests()
 
-        // iOS limits queued local notifications, so keep a rolling window and refresh whenever app runs.
         var probe = Date()
         for index in 0..<40 {
             let snap = schedule.snapshot(startedAt: start, now: probe)

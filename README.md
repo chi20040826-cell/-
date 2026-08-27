@@ -28,3 +28,6 @@ The GitHub runner uses macOS/Xcode, so your own computer can be Windows.
 - Long break every: 4 🍅
 
 All are editable before starting.
+
+## Debug build #4
+The app now shows Live Activity authorization/request status in the main screen and includes a retry button while a session is running.

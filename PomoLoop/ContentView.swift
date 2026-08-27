@@ -5,14 +5,14 @@ struct ContentView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 26) {
-                Spacer(minLength: 20)
+            VStack(spacing: 20) {
+                Spacer(minLength: 12)
                 Text(model.snapshot?.phaseTitle ?? "準備完了")
                     .font(.title2.bold())
 
                 if let snapshot = model.snapshot {
                     Text(timerInterval: Date()...snapshot.phaseEnd, countsDown: true)
-                        .font(.system(size: 64, weight: .bold, design: .rounded))
+                        .font(.system(size: 62, weight: .bold, design: .rounded))
                         .monospacedDigit()
                         .contentTransition(.numericText())
 
@@ -24,7 +24,7 @@ struct ContentView: View {
                         .foregroundStyle(.secondary)
                 } else {
                     Text(String(format: "%02d:00", model.focusMinutes))
-                        .font(.system(size: 64, weight: .bold, design: .rounded))
+                        .font(.system(size: 62, weight: .bold, design: .rounded))
                         .monospacedDigit()
                     Text("日付をまたいでもカウントはリセットされません")
                         .font(.footnote)
@@ -38,6 +38,24 @@ struct ContentView: View {
                 .controlSize(.large)
                 .tint(model.isRunning ? .red : .accentColor)
 
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Dynamic Island デバッグ")
+                        .font(.headline)
+                    Text(model.liveActivityStatus)
+                        .font(.footnote.monospaced())
+                        .textSelection(.enabled)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+
+                    if model.isRunning {
+                        Button("Live Activityを再試行") {
+                            model.retryLiveActivity()
+                        }
+                        .buttonStyle(.bordered)
+                    }
+                }
+                .padding(12)
+                .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
+
                 Form {
                     Section("サイクル設定") {
                         Stepper("集中 \(model.focusMinutes)分", value: $model.focusMinutes, in: 1...180)
@@ -46,7 +64,7 @@ struct ContentView: View {
                         Stepper("長休憩は \(model.longBreakEvery)🍅 ごと", value: $model.longBreakEvery, in: 1...20)
                     }
                 }
-                .frame(maxHeight: 260)
+                .frame(maxHeight: 240)
             }
             .padding(.horizontal)
             .navigationTitle("PomoLoop")
