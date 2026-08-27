@@ -31,3 +31,7 @@ All are editable before starting.
 
 ## Debug build #4
 The app now shows Live Activity authorization/request status in the main screen and includes a retry button while a session is running.
+
+
+## Debug #5
+Dynamic Island foreground is explicitly white in compact, expanded and minimal presentations.

@@ -7,45 +7,64 @@ struct PomoLoopLiveActivity: Widget {
         ActivityConfiguration(for: PomodoroActivityAttributes.self) { context in
             HStack(spacing: 16) {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(context.state.phaseTitle).font(.headline)
-                    Text("🍅 \(context.state.completedPomodoros)").font(.subheadline)
+                    Text(context.state.phaseTitle)
+                        .font(.headline)
+                        .foregroundStyle(.white)
+                    Text("🍅 \(context.state.completedPomodoros)")
+                        .font(.subheadline)
+                        .foregroundStyle(.white)
                 }
                 Spacer()
                 Text(timerInterval: Date()...context.state.phaseEnd, countsDown: true)
                     .font(.title2.bold())
                     .monospacedDigit()
+                    .foregroundStyle(.white)
             }
             .padding()
-            .activityBackgroundTint(.black.opacity(0.85))
+            .activityBackgroundTint(.black.opacity(0.90))
             .activitySystemActionForegroundColor(.white)
         } dynamicIsland: { context in
             DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {
-                    VStack(alignment: .leading) {
-                        Text(context.state.phaseTitle).font(.headline)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(context.state.phaseTitle)
+                            .font(.headline)
+                            .foregroundStyle(.white)
                         Text("🍅 \(context.state.completedPomodoros)")
+                            .font(.subheadline.bold())
+                            .foregroundStyle(.white)
                     }
                 }
                 DynamicIslandExpandedRegion(.trailing) {
                     Text(timerInterval: Date()...context.state.phaseEnd, countsDown: true)
                         .font(.title3.bold())
                         .monospacedDigit()
+                        .foregroundStyle(.white)
                 }
                 DynamicIslandExpandedRegion(.bottom) {
                     Text("STOPするまでサイクル継続")
                         .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(.white.opacity(0.75))
                 }
             } compactLeading: {
-                Text("🍅\(context.state.completedPomodoros)")
-                    .font(.caption2.bold())
+                HStack(spacing: 2) {
+                    Text("🍅")
+                    Text("\(context.state.completedPomodoros)")
+                        .monospacedDigit()
+                }
+                .font(.caption2.bold())
+                .foregroundStyle(.white)
             } compactTrailing: {
                 Text(timerInterval: Date()...context.state.phaseEnd, countsDown: true)
+                    .font(.caption.bold())
                     .monospacedDigit()
-                    .frame(maxWidth: 52)
+                    .foregroundStyle(.white)
+                    .frame(width: 50)
             } minimal: {
                 Text("🍅")
+                    .foregroundStyle(.white)
             }
+            .keylineTint(.white)
         }
     }
 }
