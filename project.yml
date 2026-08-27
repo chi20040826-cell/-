@@ -25,6 +25,9 @@ targets:
     deploymentTarget: "18.0"
     sources:
       - path: PomoLoopLiveActivity
+        excludes:
+          - PomoLoopLiveActivityBundle.swift
+          - PomoLoopLiveActivityAttributes.swift
       - path: Shared
     settings:
       base:

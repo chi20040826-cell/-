@@ -6,3 +6,11 @@ Changes focused on blank/black Live Activity UI:
 - NSSupportsLiveActivities added to widget extension Info.plist too.
 - APPLICATION_EXTENSION_API_ONLY enabled.
 - Dynamic Island UI reduced to simple Text/timer views for renderer isolation.
+
+
+# Fix 7
+Legacy files left in GitHub by browser uploads are explicitly excluded from the Live Activity target:
+- PomoLoopLiveActivityBundle.swift
+- PomoLoopLiveActivityAttributes.swift
+
+This avoids duplicate @main declarations and duplicate legacy ActivityAttributes sources.
