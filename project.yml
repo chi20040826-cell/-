@@ -5,7 +5,7 @@ targets:
   PomoLoop:
     type: application
     platform: iOS
-    deploymentTarget: "17.0"
+    deploymentTarget: "18.0"
     sources:
       - path: PomoLoop
       - path: Shared
@@ -22,7 +22,7 @@ targets:
   PomoLoopLiveActivity:
     type: app-extension
     platform: iOS
-    deploymentTarget: "17.0"
+    deploymentTarget: "18.0"
     sources:
       - path: PomoLoopLiveActivity
       - path: Shared
@@ -33,3 +33,4 @@ targets:
         GENERATE_INFOPLIST_FILE: NO
         INFOPLIST_FILE: PomoLoopLiveActivity/Info.plist
         SKIP_INSTALL: YES
+        APPLICATION_EXTENSION_API_ONLY: YES
