@@ -1,0 +1,36 @@
+name: PomoLoop
+options:
+  bundleIdPrefix: com.pomoloop.private
+targets:
+  PomoLoop:
+    type: application
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: PomoLoop
+      - path: Shared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.pomoloop.private
+        CODE_SIGN_STYLE: Automatic
+        TARGETED_DEVICE_FAMILY: "1"
+        INFOPLIST_KEY_CFBundleDisplayName: PomoLoop
+        INFOPLIST_KEY_NSSupportsLiveActivities: YES
+        GENERATE_INFOPLIST_FILE: YES
+    dependencies:
+      - target: PomoLoopLiveActivity
+  PomoLoopLiveActivity:
+    type: app-extension
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: PomoLoopLiveActivity
+      - path: Shared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.pomoloop.private.liveactivity
+        CODE_SIGN_STYLE: Automatic
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: PomoLoop Live Activity
+        INFOPLIST_KEY_NSExtension_NSExtensionPointIdentifier: com.apple.widgetkit-extension
+        SKIP_INSTALL: YES
