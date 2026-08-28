@@ -60,33 +60,6 @@ struct ContentView: View {
                     .padding(16)
                     .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 16))
 
-                    VStack(alignment: .leading, spacing: 10) {
-                        Text("Live Activity Push テスト")
-                            .font(.headline)
-
-                        Text(model.pushTokenStatus)
-                            .font(.subheadline)
-                            .foregroundStyle(model.liveActivityPushToken.isEmpty ? Color.secondary : Color.green)
-
-                        if !model.liveActivityPushToken.isEmpty {
-                            Text(model.liveActivityPushToken)
-                                .font(.system(.caption2, design: .monospaced))
-                                .textSelection(.enabled)
-                                .lineLimit(4)
-
-                            Text("↑ この16進文字列が取れれば、APNs方式の第一関門クリア")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                        } else if model.isRunning {
-                            Text("START後30〜60秒ほど待っても『取得待ち』のままなら、無料署名ではtokenが配られていない可能性があります。")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                        }
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(16)
-                    .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 16))
-
                     VStack(spacing: 10) {
                         Button("🔔 通知音をテスト") {
                             model.testNotificationSound()

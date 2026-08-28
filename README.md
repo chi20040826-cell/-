@@ -1,18 +1,7 @@
-# PomoLoop Fix #11 — Live Activity Push Token Test
+# PomoLoop Fix #13 — App Intent Update Test
 
-Based on Fix #10. The app now starts its Live Activity with `pushType: .token` and listens to `pushTokenUpdates`.
+Based on the working phase-color build (#10).
 
-## Test
-1. Install with SideStore and keep the Live Activity extension.
-2. Open PomoLoop and press START.
-3. Check the new "Live Activity Push テスト" box.
-4. If a long hexadecimal token appears, the first APNs/ActivityKit push-token test succeeded.
-5. If it stays on "Push token取得待ち…" for 30–60 seconds, the current free-signing path may not be receiving a Live Activity push token.
+Adds a Shortcuts/App Intents action named **PomoLoop Update**. It is designed to run without opening the app, reconstruct the current Pomodoro phase from the stored absolute session start time, and call ActivityKit update on the current Live Activity.
 
-No server is used in this build yet. This build only tests whether iOS gives the Live Activity a push token.
-
-
-## Fix #12
-- Fixed Swift string interpolation compile error in LiveActivityManager.
-- Fixed foregroundStyle ternary type mismatch in Push Token debug UI.
-- Removed unnecessary await on MainActor token callback.
+Test goal: create a Shortcuts personal automation that runs PomoLoop Update at a chosen time, with Run Immediately, while PomoLoop stays in the background. If Dynamic Island changes from 00:00 to the current next phase without opening PomoLoop, this route works.
