@@ -7,11 +7,11 @@ struct PomoLoopUpdateIntent: AppIntent {
     static var description = IntentDescription("現在時刻からPomoLoopのフェーズを再計算し、Live Activityを同期します。")
     static var openAppWhenRun: Bool = false
 
-    func perform() async throws -> some IntentResult & ProvidesDialog {
+    func perform() async throws -> some IntentResult & ProvidesDialog & ReturnsValue<Date> {
         let defaults = UserDefaults.standard
         let startEpoch = defaults.double(forKey: "sessionStart")
         guard startEpoch > 0 else {
-            return .result(dialog: "PomoLoopは停止中です")
+            return .result(value: Date(), dialog: "PomoLoopは停止中です")
         }
 
         let focusMinutes = max(1, defaults.integer(forKey: "focusMinutes"))
@@ -43,7 +43,7 @@ struct PomoLoopUpdateIntent: AppIntent {
             await activity.update(ActivityContent(state: state, staleDate: snapshot.phaseEnd))
         }
 
-        return .result(dialog: "Dynamic Islandを同期しました")
+        return .result(value: snapshot.phaseEnd, dialog: "Dynamic Islandを同期しました。次の切替時刻を返しました")
     }
 }
 

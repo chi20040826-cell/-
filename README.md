@@ -8,3 +8,7 @@ Test goal: create a Shortcuts personal automation that runs PomoLoop Update at a
 
 ## Fix #14
 - Fixed AppShortcuts utterances to include the required application name token (`\\(.applicationName)`).
+
+
+## Fix15 - Shortcut loop
+PomoLoop Update now returns the current phase end Date to Shortcuts while updating the Live Activity. Use that output as the until-date for the dedicated Study Focus mode.
