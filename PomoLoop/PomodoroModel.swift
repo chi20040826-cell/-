@@ -9,6 +9,8 @@ final class PomodoroModel: ObservableObject {
     @Published var snapshot: PomodoroSnapshot?
     @Published var liveActivityStatus = "Live Activity状態を確認中…"
     @Published var notificationStatus = ""
+    @Published var pushTokenStatus = "未テスト"
+    @Published var liveActivityPushToken = ""
 
     @AppStorage("focusMinutes") var focusMinutes = 25
     @AppStorage("shortBreakMinutes") var shortBreakMinutes = 5
@@ -47,10 +49,16 @@ final class PomodoroModel: ObservableObject {
         sessionStartEpoch = now.timeIntervalSince1970
         isRunning = true
         refresh()
-        liveActivityStatus = "⏳ Live Activity開始要求中…"
+        liveActivityStatus = "⏳ Push対応Live Activity開始要求中…"
+        pushTokenStatus = "Push token取得待ち…"
+        liveActivityPushToken = ""
         Task {
             if let snapshot {
-                liveActivityStatus = await live.start(sessionStart: now, snapshot: snapshot)
+                liveActivityStatus = await live.start(sessionStart: now, snapshot: snapshot) { [weak self] token in
+                    guard let self else { return }
+                    self.liveActivityPushToken = token
+                    self.pushTokenStatus = "✅ Push token取得成功（\(token.count / 2) bytes）"
+                }
             }
             await scheduleUpcomingNotifications()
             BackgroundRefreshManager.scheduleNext()
@@ -62,9 +70,15 @@ final class PomodoroModel: ObservableObject {
             liveActivityStatus = live.authorizationSummary()
             return
         }
-        liveActivityStatus = "⏳ Live Activity再試行中…"
+        liveActivityStatus = "⏳ Push対応Live Activity再試行中…"
+        pushTokenStatus = "Push token取得待ち…"
+        liveActivityPushToken = ""
         Task {
-            liveActivityStatus = await live.start(sessionStart: start, snapshot: snapshot)
+            liveActivityStatus = await live.start(sessionStart: start, snapshot: snapshot) { [weak self] token in
+                guard let self else { return }
+                self.liveActivityPushToken = token
+                self.pushTokenStatus = "✅ Push token取得成功（\(token.count / 2) bytes）"
+            }
         }
     }
 
@@ -75,6 +89,8 @@ final class PomodoroModel: ObservableObject {
         isRunning = false
         snapshot = nil
         liveActivityStatus = "停止済み / " + live.authorizationSummary()
+        pushTokenStatus = "停止済み"
+        liveActivityPushToken = ""
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
         BGTaskScheduler.shared.cancel(taskRequestWithIdentifier: BackgroundRefreshManager.identifier)
         Task { await live.end() }

@@ -1,11 +1,12 @@
-# PomoLoop Fix #9 — Background Live Activity experiment
+# PomoLoop Fix #11 — Live Activity Push Token Test
 
-Adds BGAppRefreshTask scheduling at the next phase boundary. When iOS grants background runtime, PomoLoop recomputes the phase from the absolute session start time, updates the Live Activity, and schedules the next refresh.
+Based on Fix #10. The app now starts its Live Activity with `pushType: .token` and listens to `pushTokenUpdates`.
 
-Important: iOS does not guarantee BGAppRefreshTask will run at the requested exact time. This build is an experiment to measure how well it works on the actual device before implementing APNs Live Activity push.
+## Test
+1. Install with SideStore and keep the Live Activity extension.
+2. Open PomoLoop and press START.
+3. Check the new "Live Activity Push テスト" box.
+4. If a long hexadecimal token appears, the first APNs/ActivityKit push-token test succeeded.
+5. If it stays on "Push token取得待ち…" for 30–60 seconds, the current free-signing path may not be receiving a Live Activity push token.
 
-Recommended test: focus 1 min / short break 1 min, START, return to Home/lock screen, and do not reopen PomoLoop for several minutes.
-
-
-## Fix #10 — phase colors
-Dynamic Island / Live Activity colors: focus = red, short break = green, long break = blue. No timer or notification logic changed from #9.
+No server is used in this build yet. This build only tests whether iOS gives the Live Activity a push token.
