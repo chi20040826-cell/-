@@ -7,6 +7,7 @@ final class PomodoroModel: ObservableObject {
     @Published var isRunning = false
     @Published var snapshot: PomodoroSnapshot?
     @Published var liveActivityStatus = "Live Activity状態を確認中…"
+    @Published var notificationStatus = ""
 
     @AppStorage("focusMinutes") var focusMinutes = 25
     @AppStorage("shortBreakMinutes") var shortBreakMinutes = 5
@@ -122,6 +123,7 @@ final class PomodoroModel: ObservableObject {
             guard next > Date() else { probe = next.addingTimeInterval(0.5); continue }
             let content = UNMutableNotificationContent()
             content.sound = .default
+            content.interruptionLevel = .timeSensitive
             content.title = snap.isFocus ? "集中終了" : "休憩終了"
             content.body = snap.isFocus ? "次の休憩へ自動で進みます" : "次の集中へ自動で進みます"
             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: max(1, next.timeIntervalSinceNow), repeats: false)
@@ -130,4 +132,30 @@ final class PomodoroModel: ObservableObject {
             probe = next.addingTimeInterval(0.5)
         }
     }
+    func testNotificationSound() {
+        Task {
+            let center = UNUserNotificationCenter.current()
+            let granted = (try? await center.requestAuthorization(options: [.alert, .sound])) ?? false
+            guard granted else {
+                notificationStatus = "通知が許可されていません"
+                return
+            }
+
+            let content = UNMutableNotificationContent()
+            content.title = "PomoLoop 音テスト"
+            content.body = "この音が集中・休憩終了時にも鳴ります"
+            content.sound = .default
+            content.interruptionLevel = .timeSensitive
+
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 2, repeats: false)
+            let request = UNNotificationRequest(identifier: "pomoloop-sound-test", content: content, trigger: trigger)
+            do {
+                try await center.add(request)
+                notificationStatus = "2秒後にテスト通知を鳴らします"
+            } catch {
+                notificationStatus = "通知テスト失敗: \(error.localizedDescription)"
+            }
+        }
+    }
+
 }

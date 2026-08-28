@@ -1,16 +1,9 @@
-# PomoLoop Debug/Fix #6
+# PomoLoop Fix #8
 
-Changes focused on blank/black Live Activity UI:
-- Widget extension simplified to a single @main Live Activity Widget (no WidgetBundle wrapper).
-- Host app and extension deployment target explicitly aligned to iOS 18.0.
-- NSSupportsLiveActivities added to widget extension Info.plist too.
-- APPLICATION_EXTENSION_API_ONLY enabled.
-- Dynamic Island UI reduced to simple Text/timer views for renderer isolation.
-
-
-# Fix 7
-Legacy files left in GitHub by browser uploads are explicitly excluded from the Live Activity target:
-- PomoLoopLiveActivityBundle.swift
-- PomoLoopLiveActivityAttributes.swift
-
-This avoids duplicate @main declarations and duplicate legacy ActivityAttributes sources.
+- Dynamic Island renderer remains the SideStore-tested configuration.
+- Removed the large Dynamic Island debug panel from the main screen.
+- Restored always-accessible Pomodoro duration controls in a scrollable layout.
+- Focus / short break / long break / long-break frequency can be edited again.
+- Local notifications use the default notification sound and Time Sensitive interruption level.
+- Added a "通知音をテスト" button that schedules a sound test after 2 seconds.
+- Foreground notification presentation includes banner/list/sound.
