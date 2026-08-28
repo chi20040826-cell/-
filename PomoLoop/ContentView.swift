@@ -66,7 +66,7 @@ struct ContentView: View {
 
                         Text(model.pushTokenStatus)
                             .font(.subheadline)
-                            .foregroundStyle(model.liveActivityPushToken.isEmpty ? .secondary : .green)
+                            .foregroundStyle(model.liveActivityPushToken.isEmpty ? Color.secondary : Color.green)
 
                         if !model.liveActivityPushToken.isEmpty {
                             Text(model.liveActivityPushToken)

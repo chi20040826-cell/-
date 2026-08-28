@@ -9,7 +9,7 @@ final class LiveActivityManager {
     func authorizationSummary() -> String {
         let enabled = ActivityAuthorizationInfo().areActivitiesEnabled
         let count = Activity<PomodoroActivityAttributes>.activities.count
-        return "Live Activities: \(enabled ? \"許可\" : \"無効\") / Activity数: \(count)"
+        return "Live Activities: \(enabled ? "許可" : "無効") / Activity数: \(count)"
     }
 
     func start(
@@ -50,7 +50,7 @@ final class LiveActivityManager {
                 for await tokenData in newActivity.pushTokenUpdates {
                     guard !Task.isCancelled else { break }
                     let token = tokenData.map { String(format: "%02x", $0) }.joined()
-                    await onPushToken(token)
+                    onPushToken(token)
                 }
                 _ = self
             }
