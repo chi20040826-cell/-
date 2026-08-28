@@ -1,9 +1,7 @@
-# PomoLoop Fix #8
+# PomoLoop Fix #9 — Background Live Activity experiment
 
-- Dynamic Island renderer remains the SideStore-tested configuration.
-- Removed the large Dynamic Island debug panel from the main screen.
-- Restored always-accessible Pomodoro duration controls in a scrollable layout.
-- Focus / short break / long break / long-break frequency can be edited again.
-- Local notifications use the default notification sound and Time Sensitive interruption level.
-- Added a "通知音をテスト" button that schedules a sound test after 2 seconds.
-- Foreground notification presentation includes banner/list/sound.
+Adds BGAppRefreshTask scheduling at the next phase boundary. When iOS grants background runtime, PomoLoop recomputes the phase from the absolute session start time, updates the Live Activity, and schedules the next refresh.
+
+Important: iOS does not guarantee BGAppRefreshTask will run at the requested exact time. This build is an experiment to measure how well it works on the actual device before implementing APNs Live Activity push.
+
+Recommended test: focus 1 min / short break 1 min, START, return to Home/lock screen, and do not reopen PomoLoop for several minutes.

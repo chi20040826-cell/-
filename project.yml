@@ -14,9 +14,8 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.pomoloop.private
         CODE_SIGN_STYLE: Automatic
         TARGETED_DEVICE_FAMILY: "1"
-        INFOPLIST_KEY_CFBundleDisplayName: PomoLoop
-        INFOPLIST_KEY_NSSupportsLiveActivities: YES
-        GENERATE_INFOPLIST_FILE: YES
+        GENERATE_INFOPLIST_FILE: NO
+        INFOPLIST_FILE: PomoLoop/Info.plist
     dependencies:
       - target: PomoLoopLiveActivity
   PomoLoopLiveActivity:

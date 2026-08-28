@@ -1,6 +1,7 @@
 import Foundation
 import SwiftUI
 import UserNotifications
+import BackgroundTasks
 
 @MainActor
 final class PomodoroModel: ObservableObject {
@@ -52,6 +53,7 @@ final class PomodoroModel: ObservableObject {
                 liveActivityStatus = await live.start(sessionStart: now, snapshot: snapshot)
             }
             await scheduleUpcomingNotifications()
+            BackgroundRefreshManager.scheduleNext()
         }
     }
 
@@ -74,6 +76,7 @@ final class PomodoroModel: ObservableObject {
         snapshot = nil
         liveActivityStatus = "停止済み / " + live.authorizationSummary()
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+        BGTaskScheduler.shared.cancel(taskRequestWithIdentifier: BackgroundRefreshManager.identifier)
         Task { await live.end() }
         startTicker()
     }
