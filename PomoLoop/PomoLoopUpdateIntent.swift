@@ -51,7 +51,7 @@ struct PomoLoopShortcuts: AppShortcutsProvider {
     static var appShortcuts: [AppShortcut] {
         AppShortcut(
             intent: PomoLoopUpdateIntent(),
-            phrases: ["PomoLoopを更新", "PomoLoopを同期"],
+            phrases: ["\(.applicationName)を更新", "\(.applicationName)を同期"],
             shortTitle: "PomoLoop Update",
             systemImageName: "timer"
         )
